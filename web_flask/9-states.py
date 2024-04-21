@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 """Starts a Flask web application.
 """
-from flask import Flask, render_template
 from models import storage
-from models.state import State
-from models.city import City
+from flask import Flask
+from flask import render_template
 
 app = Flask(__name__)
 
@@ -14,20 +13,17 @@ def states():
     """Displays an HTML page with a list of all States.
     States are sorted by name.
     """
-    states = storage.all(State).values()
-    sorted_states = sorted(states, key=lambda x: x.name)
-    return render_template('9-states.html', states=sorted_states)
+    states = storage.all("State")
+    return render_template("9-states.html", state=states)
 
 
 @app.route("/states/<id>", strict_slashes=False)
 def states_id(id):
     """Displays an HTML page with info about <id>, if it exists."""
-    state = storage.get(State, id)
-    if state:
-        cities = sorted(state.cities, key=lambda x: x.name)
-        return render_template('9-states.html', state=state, cities=cities)
-    else:
-        return render_template('not_found.html')
+    for state in storage.all("State").values():
+        if state.id == id:
+            return render_template("9-states.html", state=state)
+    return render_template("9-states.html")
 
 
 @app.teardown_appcontext
