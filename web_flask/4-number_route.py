@@ -1,47 +1,38 @@
 #!/usr/bin/python3
 """
 Script that starts a Flask web application
-4- n is a number
+Is it a number?
 """
-from flask import Flask, abort
+from flask import Flask, request
 
 app = Flask(__name__)
 
 
 @app.route("/", strict_slashes=False)
-def hello():
-    """Returns a greeting message."""
+def home():
     return "Hello HBNB!"
 
 
 @app.route("/hbnb", strict_slashes=False)
 def hbnb():
-    """Returns a greeting message."""
-    return "HBNB!"
+    return "HBNB"
 
 
 @app.route("/c/<text>", strict_slashes=False)
 def c(text):
-    """Returns 'C ' followed by the text variable with spaces replacing underscores."""
-    return f"C {text.replace('_', ' ')}"
+    return "C %s" % str(text.replace("_", " "))
 
 
-@app.route('/python/', defaults={'text': 'is cool'})
-@app.route("/python/<text>", strict_slashes=False)
-def python(text):
-    """Returns 'python ' followed by the text variable with spaces replacing underscores."""
-    return f"python {text.replace('_', ' ')}"
+@app.route("/python/<string:text>", strict_slashes=False)
+@app.route("/python/")
+def python(text="is_cool"):
+    return "Python %s" % str(text.replace("_", " "))
 
 
 @app.route("/number/<int:n>", strict_slashes=False)
-def show_number(n):
-    """Returns 'n  is a number' only if n is a number."""
-    if isinstance(n, int):
-        return f"{n} is a number"
-    else:
-        abort(404)
-        
+def intCheck(n):
+    return "%d is a number" % (n)
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port="5000")
